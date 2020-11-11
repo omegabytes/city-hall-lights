@@ -1,0 +1,16 @@
+[
+  {
+    "date_string": "Tuesday, November 5, 2024",
+    "start_timestamp": "2024-11-05T00:00:00Z",
+    "color": "red/white/blue",
+    "description": "in recognition of Election Day 2024",
+    "raw_event_string": "Tuesday, November 5, 2024 – red/white/blue – in recognition of Election Day 2024"
+  },
+  {
+    "date_string": "Wednesday, November 6, 2024",
+    "start_timestamp": "2024-11-06T00:00:00Z",
+    "color": "teal",
+    "description": "in recognition of the Alzheimer Foundations’ annual “Light the World Teal” Campaign",
+    "raw_event_string": "Wednesday, November 6, 2024 – teal – in recognition of the Alzheimer Foundations’ annual “Light the World Teal” Campaign"
+  }
+]
