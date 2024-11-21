@@ -157,7 +157,7 @@ func Test_transformDescription(t *testing.T) {
 				description: `in recognition of the Alzheimer Foundations’ annual "Light the World Teal" Campaign`,
 				color:       "teal",
 			},
-			want: `Today City Hall will be teal in recognition of the Alzheimer Foundations’ annual "Light the World Teal" Campaign`,
+			want: `Tonight City Hall will be teal in recognition of the Alzheimer Foundations’ annual "Light the World Teal" Campaign`,
 		},
 		{
 			name: "transforms description with one color and internal quotes in format `“`",
@@ -165,7 +165,7 @@ func Test_transformDescription(t *testing.T) {
 				description: `in recognition of the Alzheimer Foundations’ annual “Light the World Teal“ Campaign`,
 				color:       "teal",
 			},
-			want: `Today City Hall will be teal in recognition of the Alzheimer Foundations’ annual "Light the World Teal" Campaign`,
+			want: `Tonight City Hall will be teal in recognition of the Alzheimer Foundations’ annual "Light the World Teal" Campaign`,
 		},
 		{
 			name: "transforms description with one color and no joiner",
@@ -173,7 +173,7 @@ func Test_transformDescription(t *testing.T) {
 				description: `SFDPH "Living Proof" campaign`,
 				color:       "Blue",
 			},
-			want: `Today City Hall will be blue in recognition of SFDPH "Living Proof" campaign`,
+			want: `Tonight City Hall will be blue in recognition of SFDPH "Living Proof" campaign`,
 		},
 	}
 	for _, tt := range tests {

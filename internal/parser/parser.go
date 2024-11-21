@@ -127,7 +127,7 @@ func transformDescription(rawDescription string, color string) string {
 	if !strings.Contains(desc, recognitionPattern) && !strings.Contains(desc, commemoratePattern) {
 		joiner = recognitionPattern
 	}
-	descTemplate := fmt.Sprintf(`Today City Hall will be %s %s%s`, colors, joiner, desc)
+	descTemplate := fmt.Sprintf(`Tonight City Hall will be %s %s%s`, colors, joiner, desc)
 	return strings.TrimSpace(descTemplate)
 }
 
