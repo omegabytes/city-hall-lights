@@ -448,12 +448,34 @@ func TestLoadImageFromFile(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "valid image file returns reader",
+			name: "valid jpeg image file returns reader",
 			args: args{
 				path: "images/purple.jpg",
 			},
 			wantErr: false,
 		},
+		// todo
+		// {
+		// 	name: "fails for png image file",
+		// 	args: args{
+		// 		path: "images/blue-pink-white.png",
+		// 	},
+		// 	wantErr: true,
+		// },
+		// {
+		// 	name: "fails when file not found",
+		// 	args: args{
+		// 		path: "images/i-dont-exist.jpg",
+		// 	},
+		// 	wantErr: true,
+		// },
+		// {
+		// 	name: "fails when image is too large",
+		// 	args: args{
+		// 		path: "images/blue-pink-white.png",
+		// 	},
+		// 	wantErr: true,
+		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

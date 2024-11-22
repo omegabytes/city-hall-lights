@@ -4,6 +4,7 @@
     "alt_text": "San Francisco City Hall illuminated at night with vibrant pink, blue, and white lights highlighting the dome and façade. The structure stands out against a dark black sky, showcasing its detailed architectural elements and grandeur.",
     "attribution": {
       "creator": "Kae Ng",
+      "creator_handle": "",
       "title": "Brown Concrete Dome Tent",
       "source_url": "https://unsplash.com/photos/brown-concrete-dome-tent-sAn35VwjzEk",
       "license_url": ""
@@ -14,6 +15,7 @@
     "alt_text": "San Francisco City Hall illuminated in warm orange lights at night, highlighting the dome and front façade. A pathway lined with trees leads to the building, where a single person is seen walking towards the entrance. The surrounding sky is dark, emphasizing the vibrant glow of the building’s architectural details.",
     "attribution": {
       "creator": "Gurpreet Singh",
+      "creator_handle": "",
       "title": "The Hunt for Orange October",
       "source_url": "https://www.flickr.com/photos/zoxcleb/5127493349",
       "license_url": "https://creativecommons.org/licenses/by-sa/2.0"
@@ -21,11 +23,23 @@
   },
   {
     "file_name": "purple.jpg",
-    "alt_text": "",
+    "alt_text": "San Francisco City Hall illuminated in vibrant purple lights under a dramatic cloudy night sky. The building’s grand dome and façade are highlighted by the lighting, while large glowing white sculptures resembling rabbits are displayed in the foreground, surrounded by a crowd of onlookers.",
     "attribution": {
       "creator": "Brittany Murphy/The Chronicle",
-      "title": "San Francisco City Hall illuminated in vibrant purple lights under a dramatic cloudy night sky. The building’s grand dome and façade are highlighted by the lighting, while large glowing white sculptures resembling rabbits are displayed in the foreground, surrounded by a crowd of onlookers.",
+      "creator_handle": "",
+      "title": "",
       "source_url": "https://s.hdnux.com/photos/45/53/35/9877325/12/960x0.webp",
+      "license_url": ""
+    }
+  },
+  {
+    "file_name": "shades-of-amber.jpg",
+    "alt_text": "San Francisco City Hall illuminated in warm amber and orange lighting, highlighting its architectural details. The structure features tall columns, intricate designs, and a prominent dome at the center. Trees and lamp posts frame the scene, adding depth to the composition.",
+    "attribution": {
+      "creator": "Michelle Gachet/The Chronicle",
+      "creator_handle": "",
+      "title": "",
+      "source_url": "https://www.sfgate.com/living/slideshow/San-Francisco-City-Hall-colors-121255.php",
       "license_url": ""
     }
   }
