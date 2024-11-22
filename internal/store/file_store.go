@@ -1,8 +1,12 @@
 package store
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"image/jpeg"
+	"image/png"
+	"io"
 	"os"
 	"strings"
 	"time"
@@ -127,4 +131,46 @@ func (f *FileStore) CheckFileExists() (bool, error) {
 		}
 	}
 	return true, nil
+}
+
+const MAX_IMAGE_BYTES = 1000000
+
+func LoadImageFromFile(path string) (io.Reader, error) {
+	imageFile, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer imageFile.Close()
+
+	imageData, err := jpeg.Decode(imageFile)
+	if err != nil {
+		return nil, err
+	}
+
+	buffer := new(bytes.Buffer)
+	err = png.Encode(buffer, imageData)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(buffer.Bytes()) > MAX_IMAGE_BYTES {
+		return nil, fmt.Errorf("max image size exceeded: %d bytes", len(buffer.Bytes()))
+	}
+
+	return buffer, nil
+}
+
+func ReadImageMetadataFromFile(path string) ([]model.ImageMetadata, error) {
+	filename := fmt.Sprintf(path)
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	var imageMetadata []model.ImageMetadata
+	decoder := json.NewDecoder(file)
+	if err = decoder.Decode(&imageMetadata); err != nil {
+		return nil, fmt.Errorf("failed to decode json: %w", err)
+	}
+	return imageMetadata, nil
 }

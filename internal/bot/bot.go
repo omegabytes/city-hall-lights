@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"city-hall-lights/internal/model"
+	"city-hall-lights/internal/store"
 	"github.com/bluesky-social/indigo/api/atproto"
 	"github.com/bluesky-social/indigo/api/bsky"
 	"github.com/bluesky-social/indigo/lex/util"
@@ -42,12 +43,84 @@ func CreateAndSendPost(event *model.Event) {
 		panic("Something else went wrong, please look at the returned error")
 	}
 
-	post := &bsky.FeedPost{
-		Text:      event.Description,
-		CreatedAt: time.Now().Local().Format(time.RFC3339),
+	imageMeta, err := store.ReadImageMetadataFromFile("internal/store/images/attribution.json")
+	if err != nil {
+		panic(err)
 	}
 
+	selectedImage := model.ImageMetadata{}
+	for i, entry := range imageMeta {
+		if entry.FileName == fmt.Sprintf("%s.jpg", event.Color) {
+			selectedImage = imageMeta[i]
+		}
+	}
+
+	blob, err := uploadBlob(client, fmt.Sprintf("internal/store/images/%s", selectedImage.FileName))
+	if err != nil {
+		panic(err)
+	}
+	imageEmbed := buildImageEmbed(selectedImage.AltText, blob)
+	post := buildPost(event, imageEmbed)
+	err = sendPost(client, blueskyHandle, post)
+	if err != nil {
+		panic(err)
+	}
+
+	return
+}
+
+func buildImageEmbed(altText string, blob *util.LexBlob) *bsky.FeedPost_Embed {
+	return &bsky.FeedPost_Embed{
+		EmbedImages: &bsky.EmbedImages{
+			LexiconTypeID: "app.bsky.embed.images",
+			Images: []*bsky.EmbedImages_Image{
+				{
+					Alt:   altText,
+					Image: blob,
+				},
+			},
+		},
+	}
+}
+
+func uploadBlob(client *bluesky.Client, path string) (*util.LexBlob, error) {
+	buffer, err := store.LoadImageFromFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	var blob *util.LexBlob
 	err = client.CustomCall(func(c *xrpc.Client) error {
+		// input := &atproto.RepoUploadBlob{
+		// 	Collection: "app.bsky.feed.post",
+		// 	Record: &util.LexiconTypeDecoder{
+		// 		Val: post,
+		// 	},
+		// 	Repo: blueskyHandle,
+		// }
+		output, err := atproto.RepoUploadBlob(context.Background(), c, buffer)
+		if err != nil {
+			return err
+		}
+		blob = output.Blob
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return blob, nil
+}
+
+func buildPost(event *model.Event, embed *bsky.FeedPost_Embed) *bsky.FeedPost {
+	return &bsky.FeedPost{
+		Text:      event.Description,
+		CreatedAt: time.Now().Local().Format(time.RFC3339),
+		Embed:     embed,
+	}
+}
+
+func sendPost(client *bluesky.Client, blueskyHandle string, post *bsky.FeedPost) error {
+	return client.CustomCall(func(c *xrpc.Client) error {
 		input := &atproto.RepoCreateRecord_Input{
 			Collection: "app.bsky.feed.post",
 			Record: &util.LexiconTypeDecoder{
@@ -61,9 +134,21 @@ func CreateAndSendPost(event *model.Event) {
 		}
 		return nil
 	})
-	if err != nil {
-		panic(err)
-	}
+}
 
-	return
+func createImageEmbed(client *bluesky.Client, blueskyHandle string, post *bsky.FeedPost) error {
+	return client.CustomCall(func(c *xrpc.Client) error {
+		input := &atproto.RepoCreateRecord_Input{
+			Collection: "app.bsky.feed.post",
+			Record: &util.LexiconTypeDecoder{
+				Val: post,
+			},
+			Repo: blueskyHandle,
+		}
+		_, err := atproto.RepoCreateRecord(context.Background(), c, input)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 }

@@ -2,6 +2,7 @@ package store
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"reflect"
 	"testing"
@@ -431,6 +432,99 @@ func Test_isSameDate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := isSameDate(tt.args.t1, tt.args.t2); got != tt.want {
 				t.Errorf("isSameDate() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestLoadImageFromFile(t *testing.T) {
+	type args struct {
+		path string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    io.Reader
+		wantErr bool
+	}{
+		{
+			name: "valid image file returns reader",
+			args: args{
+				path: "images/purple.jpg",
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := LoadImageFromFile(tt.args.path)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("LoadImageFromFile() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+		})
+	}
+}
+
+func Test_readImageMetadataFromFile(t *testing.T) {
+	type args struct {
+		path string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    []model.ImageMetadata
+		wantErr bool
+	}{
+		{
+			name: "valid image metadata file returns metadata",
+			args: args{
+				path: "images/attribution.json",
+			},
+			want: []model.ImageMetadata{
+				{
+					FileName: "blue-pink-white.jpg",
+					AltText:  "San Francisco City Hall illuminated at night with vibrant pink, blue, and white lights highlighting the dome and façade. The structure stands out against a dark black sky, showcasing its detailed architectural elements and grandeur.",
+					Attribution: model.Attribution{
+						Creator:    "Kae Ng",
+						Title:      "Brown Concrete Dome Tent",
+						SourceURL:  "https://unsplash.com/photos/brown-concrete-dome-tent-sAn35VwjzEk",
+						LicenseURL: "",
+					},
+				},
+				{
+					FileName: "orange.jpg",
+					AltText:  "San Francisco City Hall illuminated in warm orange lights at night, highlighting the dome and front façade. A pathway lined with trees leads to the building, where a single person is seen walking towards the entrance. The surrounding sky is dark, emphasizing the vibrant glow of the building’s architectural details.",
+					Attribution: model.Attribution{
+						Creator:    "Gurpreet Singh",
+						Title:      "The Hunt for Orange October",
+						SourceURL:  "https://www.flickr.com/photos/zoxcleb/5127493349",
+						LicenseURL: "https://creativecommons.org/licenses/by-sa/2.0",
+					},
+				},
+				{
+					FileName: "purple.jpg",
+					AltText:  "",
+					Attribution: model.Attribution{
+						Creator:    "Brittany Murphy/The Chronicle",
+						Title:      "San Francisco City Hall illuminated in vibrant purple lights under a dramatic cloudy night sky. The building’s grand dome and façade are highlighted by the lighting, while large glowing white sculptures resembling rabbits are displayed in the foreground, surrounded by a crowd of onlookers.",
+						SourceURL:  "https://s.hdnux.com/photos/45/53/35/9877325/12/960x0.webp",
+						LicenseURL: "",
+					},
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := ReadImageMetadataFromFile(tt.args.path)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ReadImageMetadataFromFile() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ReadImageMetadataFromFile() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
